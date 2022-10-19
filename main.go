@@ -32,7 +32,7 @@ func main() {
 	defer response.Body.Close()
 
 	body, err := io.ReadAll(response.Body)
-	if err != nill {
+	if err != nil {
 		log.Fatal(err)
 	}
 
