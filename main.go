@@ -37,7 +37,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Printf("HTTP Status Code: %d\nBody: %s\n", response.StatusCode, body)
+	// update respone.body byte stream into string format
+	fmt.Printf("HTTP Status Code: %d\nBody: %s\n", response.StatusCode, string(body))
 
 }
