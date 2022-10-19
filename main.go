@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -8,6 +9,12 @@ import (
 	"net/url"
 	"os"
 )
+
+type Words struct {
+	Page  string   `json:"page"`
+	Input string   `json:"input"`
+	Words []string `json:"words"`
+}
 
 func main() {
 	args := os.Args
@@ -28,7 +35,6 @@ func main() {
 
 	if err != nil {
 		log.Fatal(err)
-		os.Exit(1)
 	}
 	// defer the closing of the response body until the function returns
 	defer response.Body.Close()
@@ -37,7 +43,17 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// update respone.body byte stream into string format
-	fmt.Printf("HTTP Status Code: %d\nBody: %s\n", response.StatusCode, string(body))
+	// update response.body byte stream into string format
+	if response.StatusCode != 200 {
+		fmt.Printf("Invalid output (HTTP Code %d): %s\n", response.StatusCode, string(body))
+		os.Exit(1)
+	}
+	var words Words
 
+	err = json.Unmarshal(body, &words)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("JSON Parsed\nPage: %s\nWords: %v\n", words.Page, words.Words)
 }
